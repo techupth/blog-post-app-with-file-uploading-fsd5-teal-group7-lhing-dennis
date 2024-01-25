@@ -34,8 +34,11 @@ function AuthProvider(props) {
   };
 
   // register the user
+  // 2.2 request ที่ส่ง เป็น request แบบพิเศษ(multipart/form-data) จะระบุเข้าไปใน argument ตำแหน่งที่ 3 เพื่อให้ server รู้
   const register = async (data) => {
-    await axios.post("http://localhost:4000/auth/register", data);
+    await axios.post("http://localhost:4000/auth/register", data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     navigate("/login");
   };
 

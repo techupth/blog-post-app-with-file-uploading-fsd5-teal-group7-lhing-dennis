@@ -5,9 +5,17 @@ import authRouter from "./apps/auth.js";
 import postRouter from "./apps/posts.js";
 import { client } from "./utils/db.js";
 import dotenv from "dotenv";
+import cloudinary from "cloudinary";
 
 async function init() {
   dotenv.config();
+  // 4.4 นำข้อมูล API KEY จากเว็บ cloudinary มา setup ที่ฝั่ง server
+  cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET,
+    secure: true,
+  });
 
   const app = express();
   const port = 4000;
