@@ -10,7 +10,7 @@ export const protect = async (req, res, next) => {
   }
 
   const tokenWithoutBearer = token.split(" ")[1];
-
+  //เอา secret key มาจาก .env
   jwt.verify(tokenWithoutBearer, process.env.SECRET_KEY, (err, payload) => {
     if (err) {
       return res.status(401).json({

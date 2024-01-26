@@ -6,20 +6,39 @@ function RegisterPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
-
+  const [avatar, setAvatar] = useState({});
   const { register } = useAuth();
+  function handleAvatar(e) {
+    e.preventDefault();
+
+    const id = Date.now();
+    if (Object.keys(avatar).length === 2) {
+      return;
+    }
+    setAvatar({
+      ...avatar,
+      [id]: e.target.files[0],
+    });
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = {
-      username,
-      password,
-      firstName,
-      lastName,
-    };
-    register(data);
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("password", password);
+    formData.append("firstName", firstName);
+    formData.append("lastNamee", lastName);
+    for (let key in avatar) {
+      formData.append("avatar", avatar[key]);
+    }
+    register(formData);
   };
-
+  function handleDeleteAvatar(e, avatarKey) {
+    e.preventDefault();
+    const newAvatar = { ...avatar };
+    delete newAvatar[avatarKey];
+    setAvatar({ ...newAvatar });
+  }
   return (
     <div className="register-form-container">
       <form className="register-form" onSubmit={handleSubmit}>
@@ -93,9 +112,24 @@ function RegisterPage() {
               type="file"
               placeholder="Enter last name here"
               multiple
-              onChange={(event) => {}}
+              onChange={handleAvatar}
             />
           </label>
+
+          {Object.keys(avatar).map((avatarKey) => {
+            const file = avatar[avatarKey];
+            return (
+              <div key={avatarKey}>
+                <img src={URL.createObjectURL(file)} alt={file.name} />
+                <button
+                  style={{ width: "100px", textAlign: "center" }}
+                  onClick={(e) => handleDeleteAvatar(e, avatarKey)}
+                >
+                  💩
+                </button>
+              </div>
+            );
+          })}
         </div>
         <div className="form-actions">
           <button type="submit">Submit</button>
